@@ -1,0 +1,131 @@
+{% extends 'layout.html' %}
+{% block content %}
+<style>
+   body{
+        background:aquamarine;
+        color:white;
+   }
+.myblock{
+    border:1px solid black;
+    border-radius: 4%;
+    background: rgba(0,0,0,0.5);
+    margin-top:3%;
+}
+.h1{
+    margin-bottom:5% ;
+    color:white;
+}
+.mybtn{
+ background: rgba(0,0,0,0.5);
+}
+
+</style>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-3 col-md-3 col-sm-12"></div>
+        <div class="col-lg-6 col-md-6 col-sm-12 myblock">
+            <h1 class="h1">Calculo de flujo de caja de Bono corporativo</h1>
+            <br>
+            <form action="/calflujo" method="POST" class="form-group">
+                <h3 class="h3">Datos Previos</h3>
+                <br>
+                <label class="label">Metodo de cálculo</label>
+                <select name="mcalculo" id="mcalc">
+                    <option value="americano">Americano</option>
+                    <option value="aleman">Aleman</option>
+                    <option value="Frances">Frances</option>
+                </select>
+                <br>
+                <label class="label">Tipo de moneda</label>
+                <select name="tmoneda" id="tmone">
+                    <option value="sol">Sol</option>
+                    <option value="dolar">Dolar</option>
+                    <option value="euro">Euro</option>
+                </select>
+                <br>
+                <br>
+                <br>
+                <h3 class="h3">Datos de Bono</h3>
+                <br>
+                <label class="label">Valor Nominal</label>
+                <input type="number" step="0.01" name="vnominal" placeholder="Valor nominal" class="form-control">
+                <br>
+                <label class="label">Valor Comercial</label>
+                <input type="number" step="0.01" name="vcomercial" placeholder="Valor comercial" class="form-control">
+                <br>
+                <label class="label">Numero de Años</label>
+                <input type="number" name="nanos" placeholder="Numero de años" class="form-control">
+                <br>
+                <label class="label">Frecuencia de pago</label>
+                <select name="fpago" id="fpago">
+                    <option value="diaria">Diaria</option>
+                    <option value="mensual">Mensual</option>
+                    <option value="Anual">Anual</option>
+                </select>
+                <br>
+                <label class="label">Dias por Año</label>
+                <select name="dxano" id="dxano">
+                    <option value="360">360</option>
+                    <option value="365">365</option>
+                </select>
+                <br>
+                <label class="label">Tipo de tasa de interés</label>
+                <select name="ttasa" id="ttasa">
+                    <option value="efectiva">Efectiva</option>
+                    <option value="anual">Anual</option>
+                </select>
+                <br>
+                <label class="label">Capitalización</label>
+                <select name="capi" id="capi">
+                    <option value="Mensual">Mensual</option>
+                    <option value="Anual">Anual</option>
+                    <option value="Semestral">Semestral</option>
+                    <option value="Trimestral">Trimestral</option>
+                    <option value="Bimestral">Bimestral</option>
+                    <option value="Quincenal">Quincenal</option>
+                    <option value="Diaria">Diaria</option>
+                </select>
+                <br>
+                <br>
+                <label class="label">Tasa de interés (%)</label>
+                <input type="number" step="0.00000001" name="tinteres" placeholder="Tasa de interés" class="form-control">
+                <br>
+                <label class="label">Tasa de Descuento (%)</label>
+                <input type="number" step="0.00000001" name="tdesc" placeholder="Tasa de Descuento (%)" class="form-control">
+                <br>
+                <label class="label">Ipm. a la Renta</label>
+                <input type="number" step="0.00000001" name="irenta" placeholder="Impuesto a la Renta" class="form-control">
+                <br>
+                <label class="label">Fecha de emisión</label>
+                <input type="date" id="femision" name="femision" value="2020-01-01" min="1900-01-01" max="2200-01-01">
+                <br>
+                <br>
+                <br>
+                <h3 class="h3">Costes y gastos Iniciales</h3>
+                <br>
+                <label class="label">% Prima</label>
+                <input type="number" step="0.00000001" name="prima" placeholder="% Prima" class="form-control">
+                <br>
+                <label class="label">% Estructuración</label>
+                <input type="number" step="0.00000001" name="estruc" placeholder="% Estructuración" class="form-control">
+                <br>
+                <label class="label">% Colocación</label>
+                <input type="number" step="0.00000001" name="coloc" placeholder="% Colocación" class="form-control">
+                <br>
+                <label class="label">% Flotación</label>
+                <input type="number" step="0.00000001" name="flota" placeholder="% Flotación" class="form-control">
+                <br>
+                <label class="label">% CAVALI</label>
+                <input type="number" step="0.00000001" name="cavali" placeholder="% CAVALI" class="form-control">
+                <br>
+                <br>
+                <br>
+                <button type="submit" class="btn btn-block btn-dark mybtn">Calcular</button>
+            </form>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-12"></div>
+    </div>
+</div>
+
+
+{% endblock %}

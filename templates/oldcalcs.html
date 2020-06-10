@@ -1,0 +1,62 @@
+{% extends 'layout.html' %}
+{% block content %}
+<style>
+   body{
+        background:Black;
+        color:white;
+   }
+.h1{
+    margin-bottom:5% ;
+    color:white;
+}
+.mybtn{
+ background: rgba(0,0,0,0.5);
+}
+table, td, th {
+    border: 1px solid #aaa;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th {
+    height: 30px;
+}
+
+td {
+    text-align: center;
+    padding: 5px;
+}
+</style>
+<div class="content">
+    <h1 style="text-align: center">Registro de cálculos pasados</h1>
+    {% if calculos|length < 1 %}
+    <h4 style="text-align: center">No hay calculos realizados.</h4>
+    {% else %}
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Fecha de cálculo</th>
+            <th>Metodo de cálculo</th>
+            <th>Tipo de moneda</th>
+            <th>Ver</th>
+            <th>Eliminar</th>
+        </tr>
+        {% for calculo in calculos %}
+            <tr>
+                <td>{{ calculo.id }}</td>
+                <td>{{ calculo.fcalculo }}</td>
+                <td>{{ calculo.mcalculo }}</td>
+                <td>{{ calculo.tmoneda }}</td>
+                <td><a href="">Ver</a></td>
+                <td><a href="">Eliminar</a></td>
+            </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+</div>
+
+
+{% endblock %}

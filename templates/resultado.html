@@ -1,0 +1,113 @@
+{% extends 'layout.html' %}
+{% block content %}
+<style>
+   body{
+        background:Black;
+        color:white;
+   }
+.h1{
+    margin-bottom:5% ;
+    color:white;
+}
+.mybtn{
+ background: rgba(0,0,0,0.5);
+}
+table, td, th {
+    border: 1px solid #aaa;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th {
+    height: 30px;
+}
+
+td {
+    text-align: center;
+    padding: 5px;
+}
+</style>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-3 col-md-3 col-sm-12"></div>
+        <div class="col-lg-6 col-md-6 col-sm-12 myblock">
+            <h1 class="h1">Resultado de flujo de caja de Bono corporativo</h1>
+            <br>
+            <h3 class="h3">Datos de Estructuración del bono</h3>
+                <br>
+                <h5 class="h5">Numero de Periodos por año: {{ resultado[0] }}</h5>
+                <br>
+                <h5 class="h5">Numero Total de Periodos: {{ resultado[1] }}</h5>
+                <br>
+                <h5 class="h5">TEA: {{ resultado[2] }}</h5>
+                <br>
+                <h5 class="h5">TEP: {{ resultado[3] }}</h5>
+                <br>
+                <h5 class="h5">COK del periodo: {{ resultado[4] }}</h5>
+                <br>
+                <h5 class="h5">Costes Iniciales Emisor: {{ resultado[5] }}</h5>
+                <br>
+                <h5 class="h5">Costes Iniciales Bonista: {{ resultado[6] }}</h5>
+                <br>
+                <h5 class="h5">TIR Emisor: {{ resultado[7] }}</h5>
+                <br>
+                <h5 class="h5">TIR Bonista: {{ resultado[8] }}</h5>
+                <br>
+                <h5 class="h5">TIR Emisor c/Escudo: {{ resultado[9] }}</h5>
+                <br>
+                <br>
+                <h3 class="h3">Resultados</h3>
+                <br>
+                <h5 class="h5">Precio Actual: {{ resultado[10] }}</h5>
+                <br>
+                <h5 class="h5">VNA (Utilidad/Perdida): {{ resultado[11] }}</h5>
+                <br>
+                <br>
+                <h3 class="h3">Indicadores de rentabilidad</h3>
+                <br>
+                <h5 class="h5">TCEA Emisor: {{ resultado[12] }}</h5>
+                <br>
+                <h5 class="h5">TCEA Emisor c/Escudo: {{ resultado[13] }}</h5>
+                <br>
+                <h5 class="h5">TREA Bonista: {{ resultado[14] }}</h5>
+                <br>
+                <br>
+                <h3 class="h3">Flujo de caja</h3>
+                <br>
+                <table>
+                    <tr>
+                        <th>#</th>
+                        <th>Fecha de Pago</th>
+                        <th>Inflación Anual</th>
+                        <th>Inflación Periodo</th>
+                        <th>Plazo de Gracia</th>
+                        <th>Bono</th>
+                        <th>Cupón</th>
+                        <th>Cuota</th>
+                        <th>Amortización</th>
+                        <th>Prima</th>
+                        <th>Escudo</th>
+                        <th>Flujo Emisor</th>
+                        <th>Flujo Emisor c/ Escudo</th>
+                        <th>Flujo Emisor Bonista</th>
+                    </tr>
+                    {% for renta in resultado[15] %}
+                        <tr>
+                        {% for dato in renta %}
+                            <td>{{ dato }}</td>
+                        {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </table>
+                <br>
+                <br>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-12"></div>
+    </div>
+</div>
+
+
+{% endblock %}
