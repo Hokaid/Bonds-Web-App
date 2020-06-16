@@ -1,98 +1,127 @@
 {% extends 'layout.html' %}
 {% block content %}
 <style>
-   body{
-        background:Black;
-        color:white;
-   }
-.h1{
-    margin-bottom:5% ;
-    color:white;
+body {
+  background-image: url('/static/img/backg.jpg');
+  font-family: "Lucida Console", Courier, monospace;
+  text-align: center;
 }
-.mybtn{
- background: rgba(0,0,0,0.5);
+h1, h2, h3, h4, h5 {
+  color:white;
+  text-transform: uppercase;
+}
+ul {
+  list-style-type: square;
+  background:plum;
+  padding: 20px;
+}
+ul li {
+  text-align: left;
+  background: white;
+  margin: 5px;
 }
 table, td, th {
     border: 1px solid #aaa;
 }
-
 table {
     border-collapse: collapse;
     width: 100%;
 }
-
 th {
+    background-color: #4CAF50;
+    color: white;
+    padding: 15px;
     height: 30px;
 }
-
 td {
     text-align: center;
-    padding: 5px;
+    padding: 15px;
 }
+tr:hover {background-color: #f5f5f5;}
+tr {background-color:white;}
 </style>
+<div class="topnav" id="myTopnav">
+    <a href="/home" class="active">Inicio</a>
+    <a href="/calflujo" role="button">Calcular</a>
+    <a href="/oldcalcs" role="button">Calculos pasados</a>
+    <a href="/xcontra" role="button">Cambiar contraseña</a>
+    <a href="/logout" role="button">Cerrar sesión</a>
+    <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+      <i class="fa fa-bars"></i>
+    </a>
+  </div>
 <div class="container">
     <div class="row">
         <div class="col-lg-3 col-md-3 col-sm-12"></div>
         <div class="col-lg-6 col-md-6 col-sm-12 myblock">
+            <h1 class="h1">Datos del calculo</h1>
+            <ul>
+            <li>Valor Nominal: {{mon}} {{ bono.vnominal }}</li>
+            <li>Valor Comercial: {{mon}} {{ bono.vcomercial }}</li>
+            <li>Numero de Años: {{ bono.nanos }}</li>
+            <li>Frecuencia de pagos: {{ bono.fpago }}</li>
+            <li>Dias por Año: {{ bono.dxano }}</li>
+            <li>Tipo de tasa de interés: {{ bono.ttasa }}</li>
+            <li>Capitalización: {{ bono.capi }}</li>
+            <li>Tasa de interés (%): {{ bono.tinteres }}</li>
+            <li>Tasa anual de descuento (%): {{ bono.tdesc }}</li>
+            <li>Impuesto a la Renta (%): {{ bono.irenta }}</li>
+            <li>Fecha de Emisión: {{ bono.femision.strftime('%d/%m/%Y') }}</li>
+            <li>% Prima (%): {{ bono.prima }}</li>
+            <li>% Estructuración (%): {{ bono.estruc }}</li>
+            <li>% Colocación (%): {{ bono.coloc }}</li>
+            <li>% Flotación (%): {{ bono.flota }}</li>
+            <li>% CAVALI (%): {{ bono.cavali }}</li>
+            </ul>
+            <br>
             <h1 class="h1">Resultado de flujo de caja de Bono corporativo</h1>
             <br>
             <h3 class="h3">Datos de Estructuración del bono</h3>
-                <br>
-                <h5 class="h5">Numero de Periodos por año: {{ resultado[0] }}</h5>
-                <br>
-                <h5 class="h5">Numero Total de Periodos: {{ resultado[1] }}</h5>
-                <br>
-                <h5 class="h5">TEA: {{ resultado[2] }}</h5>
-                <br>
-                <h5 class="h5">TEP: {{ resultado[3] }}</h5>
-                <br>
-                <h5 class="h5">COK del periodo: {{ resultado[4] }}</h5>
-                <br>
-                <h5 class="h5">Costes Iniciales Emisor: {{ resultado[5] }}</h5>
-                <br>
-                <h5 class="h5">Costes Iniciales Bonista: {{ resultado[6] }}</h5>
-                <br>
-                <h5 class="h5">TIR Emisor: {{ resultado[7] }}</h5>
-                <br>
-                <h5 class="h5">TIR Bonista: {{ resultado[8] }}</h5>
-                <br>
-                <h5 class="h5">TIR Emisor c/Escudo: {{ resultado[9] }}</h5>
-                <br>
+                <ul>
+                <li>Numero de Periodos por año: {{ resultado[0] }} </li>
+                <li>Numero Total de Periodos: {{ resultado[1] }}</li>
+                <li>TEA (%): {{ resultado[2] }}</li>
+                <li>TEP (%): {{ resultado[3] }}</li>
+                <li>COK del periodo (%): {{ resultado[4] }}</li>
+                <li>Costes Iniciales Emisor: {{mon}} {{ resultado[5] }}</li>
+                <li>Costes Iniciales Bonista: {{mon}} {{ resultado[6] }}</li>
+                <li>TIR Emisor (%): {{ resultado[7] }}</li>
+                <li>TIR Bonista (%): {{ resultado[8] }}</li>
+                <li>TIR Emisor c/Escudo (%): {{ resultado[9] }}</li>
+                </ul>
                 <br>
                 <h3 class="h3">Resultados</h3>
-                <br>
-                <h5 class="h5">Precio Actual: {{ resultado[10] }}</h5>
-                <br>
-                <h5 class="h5">VNA (Utilidad/Perdida): {{ resultado[11] }}</h5>
-                <br>
+                <ul>
+                <li>Precio Actual: {{mon}} {{ resultado[10] }}</li>
+                <li>VNA (Utilidad/Perdida): {{mon}} {{ resultado[11] }}</li>
+                </ul>
                 <br>
                 <h3 class="h3">Indicadores de rentabilidad</h3>
-                <br>
-                <h5 class="h5">TCEA Emisor: {{ resultado[12] }}</h5>
-                <br>
-                <h5 class="h5">TCEA Emisor c/Escudo: {{ resultado[13] }}</h5>
-                <br>
-                <h5 class="h5">TREA Bonista: {{ resultado[14] }}</h5>
-                <br>
+                <ul>
+                <li>TCEA Emisor (%): {{ resultado[12] }}</li>
+                <li>TCEA Emisor c/Escudo (%): {{ resultado[13] }}</li>
+                <li>TREA Bonista (%): {{ resultado[14] }}</li>
+                </ul>
                 <br>
                 <h3 class="h3">Flujo de caja</h3>
                 <br>
+                <div style="overflow-x:auto;">
                 <table>
                     <tr>
                         <th>#</th>
                         <th>Fecha de Pago</th>
-                        <th>Inflación Anual</th>
-                        <th>Inflación Periodo</th>
+                        <th>Inflación Anual (%)</th>
+                        <th>Inflación Periodo (%)</th>
                         <th>Plazo de Gracia</th>
-                        <th>Bono</th>
-                        <th>Cupón</th>
-                        <th>Cuota</th>
-                        <th>Amortización</th>
-                        <th>Prima</th>
-                        <th>Escudo</th>
-                        <th>Flujo Emisor</th>
-                        <th>Flujo Emisor c/ Escudo</th>
-                        <th>Flujo Emisor Bonista</th>
+                        <th>Bono ({{mon}})</th>
+                        <th>Cupón ({{mon}})</th>
+                        <th>Cuota ({{mon}})</th>
+                        <th>Amortización ({{mon}})</th>
+                        <th>Prima ({{mon}})</th>
+                        <th>Escudo ({{mon}})</th>
+                        <th>Flujo Emisor ({{mon}})</th>
+                        <th>Flujo Emisor c/ Escudo ({{mon}})</th>
+                        <th>Flujo Emisor Bonista ({{mon}})</th>
                     </tr>
                     {% for renta in resultado[15] %}
                         <tr>
@@ -102,12 +131,11 @@ td {
                         </tr>
                     {% endfor %}
                 </table>
+                </div>
                 <br>
                 <br>
         </div>
         <div class="col-lg-3 col-md-3 col-sm-12"></div>
     </div>
 </div>
-
-
 {% endblock %}

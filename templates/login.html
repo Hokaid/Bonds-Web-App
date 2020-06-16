@@ -1,5 +1,6 @@
 {% extends 'layout.html' %}
 {% block content %}
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 <style>
     body{
         background:aquamarine;
@@ -18,7 +19,9 @@
 .mybtn{
  background: rgba(0,0,0,0.5);
 }
-
+.message {
+    color: white;
+}
 </style>
 <div class="container">
     <div class="row">
@@ -28,21 +31,21 @@
             <form action="/login" method="POST" class="form-group">
             
             <div class="form-group">
-                <input type="email" name="email" placeholder="Email" class="form-control">
+                <input type="text" name="username" placeholder="Nombre de usuario" class="form-control">
             </div>
             <div class="form-group">
-                <input type="password" name="password" placeholder="Password" class="form-control">
+                <input type="password" name="password" placeholder="Contraseña" class="form-control">
             </div>
             <div class="form-group">
                 <button type="submit" class="btn btn-block btn-dark mybtn">Iniciar sesión</button>
                 <a href="/signup" class="btn btn-block btn-dark  mybtn link">Registrarse</a>
             </div>
             </form>
-            {% with messages = get_flashed_messages() %}
+            {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
             <ul class=flashes>
-                {% for message in messages %}
-                <li>{{ message }}</li>
+                {% for category, message in messages %}
+                <div class="{{ category }}">{{ message }}</div>
                 {% endfor %}
             </ul>
             {% endif %}

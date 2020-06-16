@@ -1,21 +1,56 @@
 {% extends 'layout.html' %}
 {% block content %}
+<style>
+body {
+  background-image: url('/static/img/backg.jpg');
+  font-family: "Lucida Console", Courier, monospace;
+}
+h1, h2 {
+  color:white;
+  text-align: center;
+  text-transform: uppercase;
+}
+p {
+  text-align: center;
+  font-size: 20px;
+}
+.button {
+  background-color: purple;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  border-radius: 12px;
+}
+.buttonc {
+  background-color:#f44336;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  border-radius: 12px;
+}
+</style>
 <div class="container">
     <div class="jumbotron">
         <h1 class="display-4">Menú Principal</h1>
         <h2 class="display-4">¿Que desea hacer?</h2>
         <hr class="my-4">
         <p class="lead">
-          <a class="btn btn-primary btn-lg" href="/calflujo" role="button">Calcular flujo de caja de bono corporativo</a>
           <br>
-          <br>
-          <a class="btn btn-primary btn-lg" href="" role="button">Ver mi Perfil</a>
-          <br>
-          <br>
-          <a class="btn btn-primary btn-lg" href="/oldcalcs" role="button">Ver calculos pasados</a>
-          <br>
-          <br>
-          <a class="btn btn-primary btn-lg" href="/logout" role="button">Cerrar sesión</a>
+          <a class="button" href="/calflujo" role="button">Calcular flujo de caja de bono corporativo</a>
+          <br><br><br>
+          <a class="button" href="/oldcalcs" role="button">Ver calculos pasados</a>
+          <br><br><br>
+          <a class="button" href="/xcontra" role="button">Cambiar contraseña</a>
+          <br><br><br>
+          <a class="buttonc" href="/logout" role="button">Cerrar sesión</a>
         </p>
       </div>
 </div>

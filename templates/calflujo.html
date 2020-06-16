@@ -1,131 +1,144 @@
 {% extends 'layout.html' %}
 {% block content %}
 <style>
-   body{
-        background:aquamarine;
-        color:white;
-   }
-.myblock{
-    border:1px solid black;
-    border-radius: 4%;
-    background: rgba(0,0,0,0.5);
-    margin-top:3%;
+body {
+  background-image: url('/static/img/backg.jpg');
+  font-family: "Lucida Console", Courier, monospace;
+  text-align: center;
 }
-.h1{
-    margin-bottom:5% ;
-    color:white;
+h1, h2, h3 {
+  color:white;
+  text-align: center;
+  text-transform: uppercase;
 }
-.mybtn{
- background: rgba(0,0,0,0.5);
+input {
+  width: 70%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  box-sizing: border-box;
+  background-color:white;
+  color: black;
+  border-radius: 4px;
 }
-
+select {
+  width: 70%;
+  padding: 16px 20px;
+  border: none;
+  border-radius: 4px;
+  background-color: #f1f1f1;
+}
+button[type=submit] {
+  width: 70%;
+  background-color: purple;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  border-radius: 12px;
+  font-family: "Lucida Console", Courier, monospace;
+}
 </style>
+<div class="topnav" id="myTopnav">
+    <a href="/home" class="active">Inicio</a>
+    <a href="/calflujo" role="button">Calcular</a>
+    <a href="/oldcalcs" role="button">Calculos pasados</a>
+    <a href="/xcontra" role="button">Cambiar contraseña</a>
+    <a href="/logout" role="button">Cerrar sesión</a>
+    <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+      <i class="fa fa-bars"></i>
+    </a>
+  </div>
 <div class="container">
     <div class="row">
         <div class="col-lg-3 col-md-3 col-sm-12"></div>
         <div class="col-lg-6 col-md-6 col-sm-12 myblock">
             <h1 class="h1">Calculo de flujo de caja de Bono corporativo</h1>
-            <br>
             <form action="/calflujo" method="POST" class="form-group">
-                <h3 class="h3">Datos Previos</h3>
                 <br>
-                <label class="label">Metodo de cálculo</label>
                 <select name="mcalculo" id="mcalc">
-                    <option value="americano">Americano</option>
-                    <option value="aleman">Aleman</option>
+                    <option value="" disabled selected hidden>Método de cálculo</option>
+                    <option value="Americano">Americano</option>
+                    <option value="Aleman">Aleman</option>
                     <option value="Frances">Frances</option>
                 </select>
-                <br>
-                <label class="label">Tipo de moneda</label>
+                <br><br>
                 <select name="tmoneda" id="tmone">
-                    <option value="sol">Sol</option>
-                    <option value="dolar">Dolar</option>
-                    <option value="euro">Euro</option>
+                    <option value="" disabled selected hidden>Tipo de moneda</option>
+                    <option value="Sol">Sol</option>
+                    <option value="Dolar">Dolar</option>
+                    <option value="Euro">Euro</option>
                 </select>
-                <br>
-                <br>
-                <br>
+                <br><br>
                 <h3 class="h3">Datos de Bono</h3>
-                <br>
-                <label class="label">Valor Nominal</label>
                 <input type="number" step="0.01" name="vnominal" placeholder="Valor nominal" class="form-control">
                 <br>
-                <label class="label">Valor Comercial</label>
                 <input type="number" step="0.01" name="vcomercial" placeholder="Valor comercial" class="form-control">
                 <br>
-                <label class="label">Numero de Años</label>
                 <input type="number" name="nanos" placeholder="Numero de años" class="form-control">
                 <br>
-                <label class="label">Frecuencia de pago</label>
                 <select name="fpago" id="fpago">
-                    <option value="diaria">Diaria</option>
-                    <option value="mensual">Mensual</option>
+                    <option value="" disabled selected hidden>Frecuencia de pago</option>
+                    <option value="Diaria">Diaria</option>
+                    <option value="Quincenal">Quincenal</option>
+                    <option value="Mensual">Mensual</option>
+                    <option value="Bimestral">Bimestral</option>
+                    <option value="Trimestral">Trimestral</option>
+                    <option value="Cuatrimestral">Cuatrimestral</option>
+                    <option value="Semestral">Semestral</option>
                     <option value="Anual">Anual</option>
                 </select>
-                <br>
-                <label class="label">Dias por Año</label>
+                <br><br>
                 <select name="dxano" id="dxano">
+                    <option value="" disabled selected hidden>Dias por Año</option>
                     <option value="360">360</option>
                     <option value="365">365</option>
                 </select>
-                <br>
-                <label class="label">Tipo de tasa de interés</label>
+                <br><br>
                 <select name="ttasa" id="ttasa">
-                    <option value="efectiva">Efectiva</option>
-                    <option value="anual">Anual</option>
+                    <option value="" disabled selected hidden>Tipo de tasa de interés</option>
+                    <option value="Efectiva">Efectiva</option>
+                    <option value="Nominal">Nominal</option>
                 </select>
-                <br>
-                <label class="label">Capitalización</label>
+                <br><br>
                 <select name="capi" id="capi">
-                    <option value="Mensual">Mensual</option>
-                    <option value="Anual">Anual</option>
-                    <option value="Semestral">Semestral</option>
-                    <option value="Trimestral">Trimestral</option>
-                    <option value="Bimestral">Bimestral</option>
-                    <option value="Quincenal">Quincenal</option>
+                    <option value="" disabled selected hidden>Capitalización</option>
                     <option value="Diaria">Diaria</option>
+                    <option value="Quincenal">Quincenal</option>
+                    <option value="Mensual">Mensual</option>
+                    <option value="Bimestral">Bimestral</option>
+                    <option value="Trimestral">Trimestral</option>
+                    <option value="Cuatrimestral">Cuatrimestral</option>
+                    <option value="Semestral">Semestral</option>
+                    <option value="Anual">Anual</option>
                 </select>
                 <br>
+                <input type="number" step="0.00000001" name="tinteres" placeholder="Tasa de interés (%)" class="form-control">
                 <br>
-                <label class="label">Tasa de interés (%)</label>
-                <input type="number" step="0.00000001" name="tinteres" placeholder="Tasa de interés" class="form-control">
-                <br>
-                <label class="label">Tasa de Descuento (%)</label>
                 <input type="number" step="0.00000001" name="tdesc" placeholder="Tasa de Descuento (%)" class="form-control">
                 <br>
-                <label class="label">Ipm. a la Renta</label>
-                <input type="number" step="0.00000001" name="irenta" placeholder="Impuesto a la Renta" class="form-control">
+                <input type="number" step="0.00000001" name="irenta" placeholder="Impuesto a la Renta (%)" class="form-control">
                 <br>
-                <label class="label">Fecha de emisión</label>
                 <input type="date" id="femision" name="femision" value="2020-01-01" min="1900-01-01" max="2200-01-01">
-                <br>
-                <br>
-                <br>
+                <br><br>
                 <h3 class="h3">Costes y gastos Iniciales</h3>
+                <input type="number" step="0.00000001" name="prima" placeholder="% Prima (%)" class="form-control">
                 <br>
-                <label class="label">% Prima</label>
-                <input type="number" step="0.00000001" name="prima" placeholder="% Prima" class="form-control">
+                <input type="number" step="0.00000001" name="estruc" placeholder="% Estructuración (%)" class="form-control">
                 <br>
-                <label class="label">% Estructuración</label>
-                <input type="number" step="0.00000001" name="estruc" placeholder="% Estructuración" class="form-control">
+                <input type="number" step="0.00000001" name="coloc" placeholder="% Estructuración (%)" class="form-control">
                 <br>
-                <label class="label">% Colocación</label>
-                <input type="number" step="0.00000001" name="coloc" placeholder="% Colocación" class="form-control">
+                <input type="number" step="0.00000001" name="flota" placeholder="% Flotación (%)" class="form-control">
                 <br>
-                <label class="label">% Flotación</label>
-                <input type="number" step="0.00000001" name="flota" placeholder="% Flotación" class="form-control">
-                <br>
-                <label class="label">% CAVALI</label>
-                <input type="number" step="0.00000001" name="cavali" placeholder="% CAVALI" class="form-control">
-                <br>
-                <br>
-                <br>
+                <input type="number" step="0.00000001" name="cavali" placeholder="% CAVALI (%)" class="form-control">
+                <br><br>
                 <button type="submit" class="btn btn-block btn-dark mybtn">Calcular</button>
+                <br><br>
             </form>
         </div>
         <div class="col-lg-3 col-md-3 col-sm-12"></div>
     </div>
 </div>
-
-
 {% endblock %}

@@ -13,6 +13,27 @@ db = SQLAlchemy(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 
+def detflujo(resultshow):
+    resultado = calbonos(str(resultshow.mcalculo), float(resultshow.vnominal), float(resultshow.vcomercial), 
+                         int(resultshow.nanos), str(resultshow.fpago), int(resultshow.dxano), str(resultshow.ttasa), 
+                         str(resultshow.capi), float(resultshow.tinteres)/100, float(resultshow.tdesc)/100,
+                         float(resultshow.irenta)/100, resultshow.femision.strftime('%d/%m/%Y'), float(resultshow.prima)/100, 
+                         float(resultshow.estruc)/100, float(resultshow.coloc)/100, float(resultshow.flota)/100, float(resultshow.cavali)/100)
+    for renta in resultado[15]:
+        for i in range(5, 14):
+            if renta[i] != "":
+                renta[i] = round(renta[i], 2)
+                if renta[i] < 0:
+                    renta[i] = "(" + str(-1*renta[i]) + ")"
+    return resultado
+
+def detmon(bono):
+    mon = ""
+    if bono.tmoneda == "Sol": mon = "S/"
+    elif bono.tmoneda == "Dolar": mon = "US$"
+    elif bono.tmoneda == "Euro": mon = "€"
+    return mon
+
 class User(UserMixin,db.Model):
     id = db.Column(db.Integer,primary_key=True,autoincrement=True)
     username = db.Column(db.String(200))
@@ -60,7 +81,6 @@ def get_home():
 def get_login():
     return render_template('login.html')
 
-
 @app.route('/signup',methods=['GET'])
 def get_signup():
     return render_template('signup.html')
@@ -71,7 +91,7 @@ def get_calflujo():
 
 @app.route('/oldcalcs',methods=['GET'])
 def get_oldcalcs():
-    bonos = Bono.query.order_by(Bono.fcalculo).all()
+    bonos = Bono.query.filter_by(user_id = current_user.id).order_by(Bono.fcalculo).all()
     return render_template('oldcalcs.html', calculos=bonos)
 
 @app.route('/calflujo',methods=['POST'])
@@ -80,55 +100,77 @@ def calflujo_post():
                       vcomercial =float(request.form['vcomercial']), nanos =request.form['nanos'], fpago =request.form['fpago'], 
                       dxano = int(request.form['dxano']), ttasa =request.form['ttasa'], capi =request.form['capi'],
                       tinteres =request.form['tinteres'], tdesc =request.form['tdesc'], irenta =request.form['irenta'],
-                      femision =datetime.strptime(str(request.form['femision']),'%Y-%m-%d'), prima =request.form['prima'], estruc =request.form['estruc'],
+                      femision =datetime.strptime(request.form['femision'], '%Y-%m-%d'), prima =request.form['prima'], estruc =request.form['estruc'],
                       coloc =request.form['coloc'], flota =request.form['flota'], cavali =request.form['cavali'], user_id = current_user.id)
     db.session.add(bono)
     db.session.commit()
-    parametros = []
-    parametros.append(str(request.form['mcalculo']))
-    parametros.append(str(request.form['tmoneda']))
-    parametros.append(float(request.form['vnominal']))
-    parametros.append(float(request.form['vcomercial']))
-    parametros.append(int(request.form['nanos']))
-    parametros.append(str(request.form['fpago']))
-    parametros.append(int(request.form['dxano']))
-    parametros.append(str(request.form['ttasa']))
-    parametros.append(str(request.form['capi']))
-    parametros.append(float(request.form['tinteres']))
-    parametros.append(float(request.form['tdesc']))
-    parametros.append(float(request.form['irenta']))
-    parametros.append(str(request.form['femision']))
-    parametros.append(float(request.form['prima']))
-    parametros.append(float(request.form['estruc']))
-    parametros.append(float(request.form['coloc']))
-    parametros.append(float(request.form['flota']))
-    parametros.append(float(request.form['cavali']))
-    resultado = calbonos(parametros)
-    return render_template('resultado.html', resultado=resultado)
+    return render_template('resultado.html', resultado=detflujo(bono), bono=bono, mon=detmon(bono))
+
+@app.route('/resultado/<int:id>')
+def ver_resultado(id):
+    resultshow = Bono.query.get_or_404(id)
+    return render_template('resultado.html', resultado=detflujo(resultshow), bono=resultshow, mon=detmon(resultshow))
+
+@app.route('/delete/<int:id>')
+def delete(id):
+    resultdel = Bono.query.get_or_404(id)
+    try:
+        db.session.delete(resultdel)
+        db.session.commit()
+        return redirect('/oldcalcs')
+    except:
+        return 'There was a problem deleting that task'
 
 @app.route('/login',methods=['POST'])
 def login_post():
-    email = request.form['email']
+    name = request.form['username']
     password = request.form['password']
-    user = User.query.filter_by(email=email).first()
+    user = User.query.filter_by(username=name).first()
     if not user or not (user.password == password):
-        flash("Correo electronico o contraseña incorrectos!")
+        flash("Nombre de usuario o contraseña incorrectos!", "message")
         return redirect('/login')
     login_user(user)
     return redirect('/home')
-    
 
 @app.route('/signup',methods=['POST'])
 def signup_post():
     username = request.form['username']
     email = request.form['email']
     password = request.form['password']
+    if username == "" or email == "" or password == "":
+        flash("Faltan datos!", "message")
+        return redirect('/signup')
+    users = User.query.all()
+    for u in users:
+        if (u.username == username):
+            flash("Ya existe un usuario con ese nombre!", "message")
+            return redirect('/signup')
     user = User(username=username,email=email,password=password)
     db.session.add(user)
     db.session.commit()
     user = User.query.filter_by(email=email).first()
     login_user(user)
     return redirect('/home')
+
+@app.route('/xcontra',methods=['GET'])
+def get_xcontra():
+    return render_template('xcontra.html')
+
+@app.route('/xcontra',methods=['POST'])
+def cambiar_contraseña():
+    oldpassword = request.form['oldpassword']
+    newpassword = request.form['newpassword']
+    if current_user.password != oldpassword:
+        flash("La contraseña actual ingresada es incorrecta!", "message")
+        return redirect('/xcontra')
+    user = User.query.get_or_404(current_user.id)
+    user.password = newpassword
+    try:
+        db.session.commit()
+        flash("Contraseña cambiada!")
+        return redirect('/xcontra')
+    except:
+        return 'There was an issue updating your task'
 
 @app.route('/logout',methods=['GET'])
 def logout():

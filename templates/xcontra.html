@@ -1,0 +1,76 @@
+{% extends 'layout.html' %}
+{% block content %}
+<style>
+body {
+    background-image: url('/static/img/backg.jpg');
+    font-family: "Lucida Console", Courier, monospace;
+    text-align: center;
+  }
+  h1, h2 {
+    color:white;
+    text-align: center;
+    text-transform: uppercase;
+  }
+  h3 {
+    color:white;
+    text-align: center;
+  }
+  input {
+    width: 70%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    background-color:white;
+    color: black;
+    border-radius: 4px;
+  }
+  button[type=submit] {
+    font-family: "Lucida Console", Courier, monospace;
+    width: 70%;
+    background-color: purple;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 12px;
+  }
+  .message {
+    color: white;
+}
+</style>
+<div class="topnav" id="myTopnav">
+    <a href="/home" class="active">Inicio</a>
+    <a href="/calflujo" role="button">Calcular</a>
+    <a href="/oldcalcs" role="button">Calculos pasados</a>
+    <a href="/xcontra" role="button">Cambiar contraseña</a>
+    <a href="/logout" role="button">Cerrar sesión</a>
+    <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+      <i class="fa fa-bars"></i>
+    </a>
+  </div>
+<div class="container">
+    <h1 class="h1">Cambio de contraseña</h1>
+    <form action="/xcontra" method="POST" class="form-group">
+        <br>
+        <h3 class="h3">Nombre de usuario: {{ current_user.username }}</h3>
+        <h3 class="h3">Correo del usuario: {{ current_user.email }}</h3>
+        <input type="password" name="oldpassword" placeholder="Contraseña Actual" class="form-control">
+        <br>
+        <input type="password" name="newpassword" placeholder="Nueva contraseña" class="form-control">
+        <br><br>
+        <button type="submit" class="btn btn-block btn-dark mybtn">Cambiar contraseña</button>
+    </form>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <ul class=flashes>
+        {% for category, message in messages %}
+        <div class="{{ category }}">{{ message }}</div>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+</div>
+{% endblock %}

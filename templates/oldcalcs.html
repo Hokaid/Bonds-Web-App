@@ -1,35 +1,51 @@
 {% extends 'layout.html' %}
 {% block content %}
 <style>
-   body{
-        background:Black;
-        color:white;
-   }
-.h1{
-    margin-bottom:5% ;
-    color:white;
+body {
+  background-image: url('/static/img/backg.jpg');
+  font-family: "Lucida Console", Courier, monospace;
+  text-align: center;
 }
-.mybtn{
- background: rgba(0,0,0,0.5);
+h1, h2, h3, h4, h5 {
+  color:white;
+  text-transform: uppercase;
+}
+.bver {
+    background: url('/static/img/view.png') no-repeat;
+}
+.bban {
+    background: url('/static/img/delete.png') no-repeat;
 }
 table, td, th {
     border: 1px solid #aaa;
 }
-
 table {
     border-collapse: collapse;
     width: 100%;
 }
-
 th {
+    background-color: #4CAF50;
+    color: white;
+    padding: 15px;
     height: 30px;
 }
-
 td {
     text-align: center;
-    padding: 5px;
+    padding: 15px;
 }
+tr:hover {background-color: #f5f5f5;}
+tr {background-color:white;}
 </style>
+<div class="topnav" id="myTopnav">
+    <a href="/home" class="active">Inicio</a>
+    <a href="/calflujo" class="am" role="button">Calcular</a>
+    <a href="/oldcalcs" class="am" role="button">Calculos pasados</a>
+    <a href="/xcontra" class="am" role="button">Cambiar contraseña</a>
+    <a href="/logout" class="am" role="button">Cerrar sesión</a>
+    <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+      <i class="fa fa-bars"></i>
+    </a>
+  </div>
 <div class="content">
     <h1 style="text-align: center">Registro de cálculos pasados</h1>
     {% if calculos|length < 1 %}
@@ -37,7 +53,7 @@ td {
     {% else %}
     <table>
         <tr>
-            <th>ID</th>
+            <th>#</th>
             <th>Fecha de cálculo</th>
             <th>Metodo de cálculo</th>
             <th>Tipo de moneda</th>
@@ -47,16 +63,15 @@ td {
         {% for calculo in calculos %}
             <tr>
                 <td>{{ calculo.id }}</td>
-                <td>{{ calculo.fcalculo }}</td>
+                <td>{{ calculo.fcalculo.date() }}</td>
                 <td>{{ calculo.mcalculo }}</td>
                 <td>{{ calculo.tmoneda }}</td>
-                <td><a href="">Ver</a></td>
-                <td><a href="">Eliminar</a></td>
+                <td><a class="bver" href="/resultado/{{calculo.id}}">. .</a></td>
+                <td><a class="bban" href="/delete/{{calculo.id}}">. .</a></td>
             </tr>
         {% endfor %}
     </table>
     {% endif %}
 </div>
-
 
 {% endblock %}
