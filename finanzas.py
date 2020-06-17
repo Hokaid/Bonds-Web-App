@@ -1,6 +1,6 @@
 from datetime import timedelta
 from datetime import datetime
-import numpy_financial as npf
+import numpy as npf
 from scipy import optimize
 
 def xnpv(rate, cashflows):
