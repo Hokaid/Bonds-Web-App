@@ -19,6 +19,11 @@ def detflujo(resultshow):
                          str(resultshow.capi), float(resultshow.tinteres)/100, float(resultshow.tdesc)/100,
                          float(resultshow.irenta)/100, resultshow.femision.strftime('%d/%m/%Y'), float(resultshow.prima)/100, 
                          float(resultshow.estruc)/100, float(resultshow.coloc)/100, float(resultshow.flota)/100, float(resultshow.cavali)/100)
+    resultado = list(resultado)
+    for i in range(15):
+        print(resultado[i])
+        if resultado[i] < 0:
+            resultado[i] = "(" + str(-1*resultado[i]) + ")"
     for renta in resultado[15]:
         for i in range(5, 14):
             if renta[i] != "":
