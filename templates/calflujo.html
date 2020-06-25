@@ -40,6 +40,9 @@ button[type=submit] {
   border-radius: 12px;
   font-family: "Lucida Console", Courier, monospace;
 }
+.message {
+    color: white;
+}
 </style>
 <div class="topnav" id="myTopnav">
     <a href="/home" class="active">Inicio</a>
@@ -55,18 +58,28 @@ button[type=submit] {
     <div class="row">
         <div class="col-lg-3 col-md-3 col-sm-12"></div>
         <div class="col-lg-6 col-md-6 col-sm-12 myblock">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            <ul class=flashes>
+                {% for category, message in messages %}
+                <div class="{{ category }}">{{ message }}</div>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            {% endwith %}
+            {% block body %}{% endblock %}
             <h1 class="h1">Calculo de flujo de caja de Bono corporativo</h1>
             <form action="/calflujo" method="POST" class="form-group">
                 <br>
                 <select name="mcalculo" id="mcalc">
-                    <option value="" disabled selected hidden>Método de cálculo</option>
+                    <option value="" selected hidden>Método de cálculo</option>
                     <option value="Americano">Americano</option>
                     <option value="Aleman">Aleman</option>
                     <option value="Frances">Frances</option>
                 </select>
                 <br><br>
                 <select name="tmoneda" id="tmone">
-                    <option value="" disabled selected hidden>Tipo de moneda</option>
+                    <option value="" selected hidden>Tipo de moneda</option>
                     <option value="Sol">Sol</option>
                     <option value="Dolar">Dolar</option>
                     <option value="Euro">Euro</option>
@@ -80,7 +93,7 @@ button[type=submit] {
                 <input type="number" name="nanos" placeholder="Numero de años" class="form-control">
                 <br>
                 <select name="fpago" id="fpago">
-                    <option value="" disabled selected hidden>Frecuencia de pago</option>
+                    <option value="" selected hidden>Frecuencia de pago</option>
                     <option value="Diaria">Diaria</option>
                     <option value="Quincenal">Quincenal</option>
                     <option value="Mensual">Mensual</option>
@@ -92,19 +105,19 @@ button[type=submit] {
                 </select>
                 <br><br>
                 <select name="dxano" id="dxano">
-                    <option value="" disabled selected hidden>Dias por Año</option>
+                    <option value="" selected hidden>Dias por Año</option>
                     <option value="360">360</option>
                     <option value="365">365</option>
                 </select>
                 <br><br>
                 <select name="ttasa" id="ttasa">
-                    <option value="" disabled selected hidden>Tipo de tasa de interés</option>
+                    <option value="" selected hidden>Tipo de tasa de interés</option>
                     <option value="Efectiva">Efectiva</option>
                     <option value="Nominal">Nominal</option>
                 </select>
                 <br><br>
                 <select name="capi" id="capi">
-                    <option value="" disabled selected hidden>Capitalización</option>
+                    <option value="" selected hidden>Capitalización</option>
                     <option value="Diaria">Diaria</option>
                     <option value="Quincenal">Quincenal</option>
                     <option value="Mensual">Mensual</option>
@@ -128,7 +141,7 @@ button[type=submit] {
                 <br>
                 <input type="number" step="0.00000001" name="estruc" placeholder="% Estructuración (%)" class="form-control">
                 <br>
-                <input type="number" step="0.00000001" name="coloc" placeholder="% Estructuración (%)" class="form-control">
+                <input type="number" step="0.00000001" name="coloc" placeholder="% Colocación (%)" class="form-control">
                 <br>
                 <input type="number" step="0.00000001" name="flota" placeholder="% Flotación (%)" class="form-control">
                 <br>

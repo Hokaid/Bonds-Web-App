@@ -21,7 +21,6 @@ def detflujo(resultshow):
                          float(resultshow.estruc)/100, float(resultshow.coloc)/100, float(resultshow.flota)/100, float(resultshow.cavali)/100)
     resultado = list(resultado)
     for i in range(15):
-        print(resultado[i])
         if resultado[i] < 0:
             resultado[i] = "(" + str(-1*resultado[i]) + ")"
     for renta in resultado[15]:
@@ -38,6 +37,17 @@ def detmon(bono):
     elif bono.tmoneda == "Dolar": mon = "US$"
     elif bono.tmoneda == "Euro": mon = "€"
     return mon
+
+def checkempty(request):
+    if ((request.form['mcalculo'] == "") or (request.form['tmoneda'] == "") or 
+       (request.form['vnominal'] == '') or (request.form['vcomercial'] == '') or
+       (request.form['nanos'] == '') or (request.form['fpago'] == '') or
+       (request.form['dxano'] == '') or (request.form['ttasa'] == '') or
+       (request.form['capi'] == '') or (request.form['tinteres'] == '') or
+       (request.form['tdesc'] == '') or (request.form['irenta'] == '') or (request.form['prima'] == '') or 
+       (request.form['estruc'] == '') or (request.form['coloc'] == '') or 
+       (request.form['flota'] == '') or (request.form['cavali'] == '')): return False
+    return True
 
 class User(UserMixin,db.Model):
     id = db.Column(db.Integer,primary_key=True,autoincrement=True)
@@ -101,9 +111,12 @@ def get_oldcalcs():
 
 @app.route('/calflujo',methods=['POST'])
 def calflujo_post():
-    bono = Bono(mcalculo =request.form['mcalculo'], tmoneda = request.form['tmoneda'], vnominal =float(request.form['vnominal']), 
-                      vcomercial =float(request.form['vcomercial']), nanos =request.form['nanos'], fpago =request.form['fpago'], 
-                      dxano = int(request.form['dxano']), ttasa =request.form['ttasa'], capi =request.form['capi'],
+    if not (checkempty(request)):
+        flash("No debes dejar campos vacios!", "message")
+        return redirect('/calflujo')
+    bono = Bono(mcalculo =request.form['mcalculo'], tmoneda = request.form['tmoneda'], vnominal =request.form['vnominal'], 
+                      vcomercial =request.form['vcomercial'], nanos =request.form['nanos'], fpago =request.form['fpago'], 
+                      dxano = request.form['dxano'], ttasa =request.form['ttasa'], capi =request.form['capi'],
                       tinteres =request.form['tinteres'], tdesc =request.form['tdesc'], irenta =request.form['irenta'],
                       femision =datetime.strptime(request.form['femision'], '%Y-%m-%d'), prima =request.form['prima'], estruc =request.form['estruc'],
                       coloc =request.form['coloc'], flota =request.form['flota'], cavali =request.form['cavali'], user_id = current_user.id)
@@ -167,6 +180,9 @@ def cambiar_contraseña():
     newpassword = request.form['newpassword']
     if current_user.password != oldpassword:
         flash("La contraseña actual ingresada es incorrecta!", "message")
+        return redirect('/xcontra')
+    elif newpassword == "":
+        flash("No ha ingresado una nueva contraseña!", "message")
         return redirect('/xcontra')
     user = User.query.get_or_404(current_user.id)
     user.password = newpassword
