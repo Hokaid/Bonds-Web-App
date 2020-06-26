@@ -75,8 +75,7 @@
              <div class="form-group">
             <button type="submit" class="btn btn-block btn-dark mybtn">Registrarse</button>
             <a href="/login" class="btn btn-block btn-dark  mybtn link">Iniciar sesión</a>
-            </div>
-        </div>    
+            </div>   
             </form>
             {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
@@ -89,6 +88,7 @@
             {% endwith %}
             {% block body %}{% endblock %}
         </div>
+    </div> 
         <div class="col-lg-3 col-md-3 col-sm-12"></div>
     </div>
 </div>

@@ -167,14 +167,22 @@ def signup_post():
     companyname = request.form['companyname']
     companyphone = request.form['companyphone']
     password = request.form['password']
-    if username == "" or email == "" or password == "" or firstname == "" or lastname == "" or birthday == "" or phone == "":
+    confirm = request.form['confirm']
+
+    if username == "" or email == "" or password == "" or firstname == "" or lastname == "" or birthday == "" or phone == "" or confirm== "":
         flash("Faltan datos!", "message")
         return redirect('/signup')
+
+    if (password != confirm):
+        flash("Contraseña no es igual", "message")
+        return redirect('/signup')
+
     users = User.query.all()
     for u in users:
         if (u.username == username):
             flash("Ya existe un usuario con ese nombre!", "message")
             return redirect('/signup')
+
     user = User(username=username,email=email,password=password,firstname=firstname,lastname=lastname,birthday=birthday,phone=phone,companyname=companyname,companyphone=companyphone)
     db.session.add(user)
     db.session.commit()
@@ -190,11 +198,15 @@ def get_xcontra():
 def cambiar_contraseña():
     oldpassword = request.form['oldpassword']
     newpassword = request.form['newpassword']
+    newconfirm = request.form['newconfirm']
     if current_user.password != oldpassword:
         flash("La contraseña actual ingresada es incorrecta!", "message")
         return redirect('/xcontra')
     elif newpassword == "":
         flash("No ha ingresado una nueva contraseña!", "message")
+        return redirect('/xcontra')
+    elif (newpassword != newconfirm):
+        flash("No es la misma contraseña!", "message")
         return redirect('/xcontra')
     user = User.query.get_or_404(current_user.id)
     user.password = newpassword
