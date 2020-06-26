@@ -56,7 +56,13 @@ body {
     <form action="/xcontra" method="POST" class="form-group">
         <br>
         <h3 class="h3">Nombre de usuario: {{ current_user.username }}</h3>
+        <h3 class="h3">Nombres: {{ current_user.firstname }}</h3>
+        <h3 class="h3">Apellidos: {{ current_user.lastname }}</h3>
         <h3 class="h3">Correo del usuario: {{ current_user.email }}</h3>
+        <h3 class="h3">Fecha de Nacimiento: {{ current_user.birthday }}</h3>
+        <h3 class="h3">Telefono: {{ current_user.phone }}</h3>
+        <h3 class="h3">Nombre de Compania: {{ current_user.companyname }}</h3>
+        <h3 class="h3">Telefono de Compania: {{ current_user.companyphone }}</h3>
         <input type="password" name="oldpassword" placeholder="Contraseña Actual" class="form-control">
         <br>
         <input type="password" name="newpassword" placeholder="Nueva contraseña" class="form-control">

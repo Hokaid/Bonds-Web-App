@@ -52,8 +52,14 @@ def checkempty(request):
 class User(UserMixin,db.Model):
     id = db.Column(db.Integer,primary_key=True,autoincrement=True)
     username = db.Column(db.String(200))
-    email = db.Column(db.String(200))
     password = db.Column(db.String(200))
+    firstname = db.Column(db.String(200))
+    lastname = db.Column(db.String(200))
+    email = db.Column(db.String(200))
+    birthday = db.Column(db.String(200))
+    phone = db.Column(db.String(200))
+    companyname = db.Column(db.String(200),nullable=True)
+    companyphone = db.Column(db.String(200),nullable=True)
     bonos = db.relationship('Bono', backref='user', lazy=True)
 
 class Bono(db.Model):
@@ -154,8 +160,14 @@ def login_post():
 def signup_post():
     username = request.form['username']
     email = request.form['email']
+    firstname = request.form['firstname']
+    lastname = request.form['lastname']
+    birthday = request.form['birthday']
+    phone = request.form['phone']
+    companyname = request.form['companyname']
+    companyphone = request.form['companyphone']
     password = request.form['password']
-    if username == "" or email == "" or password == "":
+    if username == "" or email == "" or password == "" or firstname == "" or lastname == "" or birthday == "" or phone == "":
         flash("Faltan datos!", "message")
         return redirect('/signup')
     users = User.query.all()
@@ -163,13 +175,13 @@ def signup_post():
         if (u.username == username):
             flash("Ya existe un usuario con ese nombre!", "message")
             return redirect('/signup')
-    user = User(username=username,email=email,password=password)
+    user = User(username=username,email=email,password=password,firstname=firstname,lastname=lastname,birthday=birthday,phone=phone,companyname=companyname,companyphone=companyphone)
     db.session.add(user)
     db.session.commit()
     user = User.query.filter_by(email=email).first()
     login_user(user)
     return redirect('/home')
-
+   
 @app.route('/xcontra',methods=['GET'])
 def get_xcontra():
     return render_template('xcontra.html')
