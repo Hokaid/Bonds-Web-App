@@ -51,6 +51,7 @@ def checkempty(request):
 
 class User(UserMixin,db.Model):
     id = db.Column(db.Integer,primary_key=True,autoincrement=True)
+    rol = db.Column(db.String(200))
     username = db.Column(db.String(200))
     password = db.Column(db.String(200))
     firstname = db.Column(db.String(200))
