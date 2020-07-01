@@ -6,7 +6,7 @@ body {
   font-family: "Lucida Console", Courier, monospace;
   text-align: center;
 }
-h1, h2, h3 {
+h1, h2, h3, h4 {
   color:white;
   text-align: center;
   text-transform: uppercase;
@@ -98,7 +98,7 @@ button[type=submit] {
                 <input type="number" step="0.00000001" name="ianual" placeholder="Inflación Anual (%)" class="form-control">
                 {% endif %}
                 {% if current_user.rol=="Bonista" %}
-                <h3 class="h3">Inflación Anual (%): </h3>
+                <h4 class="h4">Inflación Anual (%): </h4>
                 <input type="number" step="0.00000001" name="ianual" value={{bono.ianual}} readonly="readonly" class="form-control">
                 {% endif %}
                 <br><br>
@@ -154,12 +154,12 @@ button[type=submit] {
                 <input type="date" id="femision" name="femision" value="2020-01-01" min="1900-01-01" max="2200-01-01">
                 <br><br>
                 {% if current_user.rol=="Emisor" %}
-                <h3 class="h3">Indique los plazos de gracia en orden y separados por comas</h3>
-                <h3 class="h3">Ejemplo: T,T,P,P</h3>
+                <h4 class="h4">Indique los plazos de gracia en orden y separados por comas</h4>
+                <h4 class="h4">Ejemplo: T,T,P,P</h4>
                 <input type="text" name="pgracia" placeholder="Plazos de Gracia" class="form-control">
                 {% endif %}
                 {% if current_user.rol=="Bonista" %}
-                <h3 class="h3">Plazos de gracia ordenados y separados por comas: </h3>
+                <h4 class="h4">Plazos de gracia ordenados y separados por comas: </h4>
                 <input type="text" name="pgracia" value={{bono.pgracia}} readonly="readonly" class="form-control">
                 {% endif %}
                 <h3 class="h3">Costes y gastos Iniciales</h3>
@@ -177,7 +177,7 @@ button[type=submit] {
                 <button type="submit" class="btn btn-block btn-dark mybtn">Emitir y Calcular</button>
                 {% endif %}
                 {% if current_user.rol=="Bonista" %}
-                <button type="submit" class="btn btn-block btn-dark mybtn">Guadar y Calcular</button>
+                <button type="submit" class="btn btn-block btn-dark mybtn">Guardar y Calcular</button>
                 {% endif %}
                 <br><br>
             </form>

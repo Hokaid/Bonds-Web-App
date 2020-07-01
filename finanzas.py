@@ -33,8 +33,9 @@ def calbonos(mcalculo,infla,ianual,vnominal,vcomercial,nanos,fpago,dxano,ttasa,c
   if capi == "Anual": dcapi = 360
   npano = 360/fcupon
   ntp = int(npano*nanos)
-  tea =  tinteres
-  if ttasa == "Nominal": tea = ((1+(tinteres/(dxano/dcapi)))**(dxano/dcapi))-1
+  tea = tinteres
+  if ttasa == "Nominal": 
+    tea = ((1+(tinteres/(dxano/dcapi)))**(dxano/dcapi))-1
   tep = ((1+tea)**(fcupon/dxano))-1
   cok = ((1+tdesc)**(fcupon/dxano))-1
   ciemisor = vcomercial*(estruc+coloc+flota+cavali)
@@ -75,7 +76,7 @@ def calbonos(mcalculo,infla,ianual,vnominal,vcomercial,nanos,fpago,dxano,ttasa,c
       elif flujo[i][4] == 'T':
         flujo[i][8] = 0 #Cuota
         flujo[i][9] = 0 #Amoritización
-      if (i == ntp): flujo[i][10] = -1*vnominal*prima #Prima
+      if (i == ntp): flujo[i][10] = -1*flujo[i][6]*prima #Prima
       else: flujo[i][10] = 0
       flujo[i][11] = -1*irenta*flujo[i][7] #Escudo
       if (i == ntp): flujo[i][12] = (-1*flujo[i][6])+flujo[i][7]+flujo[i][10] #Flujo Emisor
