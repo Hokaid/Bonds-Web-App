@@ -39,12 +39,28 @@ td {
 }
 tr:hover {background-color: #f5f5f5;}
 tr {background-color:white;}
+.button {
+  background-color: purple;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  border-radius: 12px;
+}
 </style>
 <div class="topnav" id="myTopnav">
     <a href="/home" class="active">Inicio</a>
-    <a href="/calflujo" role="button">Calcular</a>
-    <a href="/oldcalcs" role="button">Calculos pasados</a>
-    <a href="/xcontra" role="button">Cambiar contraseña</a>
+    {% if current_user.rol=="Emisor" %}
+    <a href="/calflujo" role="button">Emitir</a>
+    <a href="/oldcalcs" role="button">bonos emitidos</a>
+    {% else %}
+    <a href="/emitbons" role="button">Evaluar</a>
+    <a href="/oldcalcs" role="button">bonos evaluados</a>
+    {% endif %}
+    <a href="/xcontra" role="button">Mi perfil</a>
     <a href="/logout" role="button">Cerrar sesión</a>
     <a href="javascript:void(0);" class="icon" onclick="myFunction()">
       <i class="fa fa-bars"></i>
@@ -54,7 +70,12 @@ tr {background-color:white;}
     <div class="row">
         <div class="col-lg-3 col-md-3 col-sm-12"></div>
         <div class="col-lg-6 col-md-6 col-sm-12 myblock">
-            <h1 class="h1">Datos del calculo</h1>
+            {% if inflaop %}
+            <br><br>
+            <a class="button" href="/calfluinf/{{bono.id}}" role="button">Ver resultados con inflación</a>
+            <br><br>
+            {% endif %}
+            <h1 class="h1">Datos del bono</h1>
             <ul>
             <li>Valor Nominal: {{mon}} {{ bono.vnominal }}</li>
             <li>Valor Comercial: {{mon}} {{ bono.vcomercial }}</li>
@@ -63,7 +84,7 @@ tr {background-color:white;}
             <li>Dias por Año: {{ bono.dxano }}</li>
             <li>Tipo de tasa de interés: {{ bono.ttasa }}</li>
             <li>Capitalización: {{ bono.capi }}</li>
-            <li>Tasa de interés (%): {{ bono.tinteres }}</li>
+            <li>Tasa de interés anual (%): {{ bono.tinteres }}</li>
             <li>Tasa anual de descuento (%): {{ bono.tdesc }}</li>
             <li>Impuesto a la Renta (%): {{ bono.irenta }}</li>
             <li>Fecha de Emisión: {{ bono.femision.strftime('%d/%m/%Y') }}</li>
@@ -114,6 +135,7 @@ tr {background-color:white;}
                         <th>Inflación Periodo (%)</th>
                         <th>Plazo de Gracia</th>
                         <th>Bono ({{mon}})</th>
+                        <th>Bono Indexado ({{mon}})</th>
                         <th>Cupón ({{mon}})</th>
                         <th>Cuota ({{mon}})</th>
                         <th>Amortización ({{mon}})</th>

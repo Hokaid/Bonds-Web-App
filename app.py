@@ -13,10 +13,11 @@ db = SQLAlchemy(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 
-def detflujo(resultshow):
-    resultado = calbonos(str(resultshow.mcalculo), float(resultshow.vnominal), float(resultshow.vcomercial), 
+
+def detflujo(resultshow, infla):
+    resultado = calbonos(str(resultshow.mcalculo), infla, float(resultshow.ianual)/100, float(resultshow.vnominal), float(resultshow.vcomercial), 
                          int(resultshow.nanos), str(resultshow.fpago), int(resultshow.dxano), str(resultshow.ttasa), 
-                         str(resultshow.capi), float(resultshow.tinteres)/100, float(resultshow.tdesc)/100,
+                         str(resultshow.capi), str(resultshow.pgracia), float(resultshow.tinteres)/100, float(resultshow.tdesc)/100,
                          float(resultshow.irenta)/100, resultshow.femision.strftime('%d/%m/%Y'), float(resultshow.prima)/100, 
                          float(resultshow.estruc)/100, float(resultshow.coloc)/100, float(resultshow.flota)/100, float(resultshow.cavali)/100)
     resultado = list(resultado)
@@ -24,7 +25,10 @@ def detflujo(resultshow):
         if resultado[i] < 0:
             resultado[i] = "(" + str(-1*resultado[i]) + ")"
     for renta in resultado[15]:
-        for i in range(5, 14):
+        for i in range(2, 4):
+            if renta[i] != "":
+                renta[i] = round(renta[i], 2)
+        for i in range(5, 15):
             if renta[i] != "":
                 renta[i] = round(renta[i], 2)
                 if renta[i] < 0:
@@ -47,12 +51,14 @@ def checkempty(request):
        (request.form['tdesc'] == '') or (request.form['irenta'] == '') or (request.form['prima'] == '') or 
        (request.form['estruc'] == '') or (request.form['coloc'] == '') or 
        (request.form['flota'] == '') or (request.form['cavali'] == '')): return False
+    if (current_user.rol == "Emisor"):
+        if (request.form['ianual'] == ''): return False
     return True
 
 class User(UserMixin,db.Model):
     id = db.Column(db.Integer,primary_key=True,autoincrement=True)
-    rol = db.Column(db.String(200))
     username = db.Column(db.String(200))
+    rol = db.Column(db.String(200))
     password = db.Column(db.String(200))
     firstname = db.Column(db.String(200))
     lastname = db.Column(db.String(200))
@@ -67,6 +73,7 @@ class Bono(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     fcalculo = db.Column(db.DateTime, default=datetime.utcnow)
     mcalculo = db.Column(db.String(20))
+    ianual = db.Column(db.Float)
     tmoneda = db.Column(db.String(20))
     vnominal = db.Column(db.Float)
     vcomercial = db.Column(db.Float)
@@ -75,6 +82,7 @@ class Bono(db.Model):
     dxano = db.Column(db.Integer)
     ttasa = db.Column(db.String(50))
     capi = db.Column(db.String(50))
+    pgracia = db.Column(db.String(1000))
     tinteres = db.Column(db.Float)
     tdesc = db.Column(db.Float)
     irenta = db.Column(db.Float)
@@ -107,6 +115,11 @@ def get_login():
 def get_signup():
     return render_template('signup.html')
 
+@app.route('/configbon/<int:id>',methods=['GET'])
+def get_configbon(id):
+    bono = Bono.query.get_or_404(id)
+    return render_template('calflujo.html',bono=bono)
+
 @app.route('/calflujo',methods=['GET'])
 def get_calflujo():
     return render_template('calflujo.html')
@@ -114,27 +127,41 @@ def get_calflujo():
 @app.route('/oldcalcs',methods=['GET'])
 def get_oldcalcs():
     bonos = Bono.query.filter_by(user_id = current_user.id).order_by(Bono.fcalculo).all()
-    return render_template('oldcalcs.html', calculos=bonos)
+    return render_template('oldcalcs.html', calculos=bonos, confiop = False)
+
+@app.route('/emitbons',methods=['GET'])
+def get_emitbons():
+    emisores = User.query.filter_by(rol="Emisor").all()
+    totalbonos = []
+    for emi in emisores:
+        bonos = Bono.query.filter_by(user_id = emi.id).order_by(Bono.fcalculo).all()
+        totalbonos = totalbonos + bonos
+    return render_template('oldcalcs.html', calculos=totalbonos, confiop=True)
 
 @app.route('/calflujo',methods=['POST'])
 def calflujo_post():
     if not (checkempty(request)):
         flash("No debes dejar campos vacios!", "message")
         return redirect('/calflujo')
-    bono = Bono(mcalculo =request.form['mcalculo'], tmoneda = request.form['tmoneda'], vnominal =request.form['vnominal'], 
+    bono = Bono(mcalculo =request.form['mcalculo'], ianual=request.form['ianual'], tmoneda = request.form['tmoneda'], vnominal =request.form['vnominal'], 
                       vcomercial =request.form['vcomercial'], nanos =request.form['nanos'], fpago =request.form['fpago'], 
-                      dxano = request.form['dxano'], ttasa =request.form['ttasa'], capi =request.form['capi'],
+                      dxano = request.form['dxano'], ttasa =request.form['ttasa'], capi =request.form['capi'], pgracia = request.form['pgracia'],
                       tinteres =request.form['tinteres'], tdesc =request.form['tdesc'], irenta =request.form['irenta'],
                       femision =datetime.strptime(request.form['femision'], '%Y-%m-%d'), prima =request.form['prima'], estruc =request.form['estruc'],
                       coloc =request.form['coloc'], flota =request.form['flota'], cavali =request.form['cavali'], user_id = current_user.id)
     db.session.add(bono)
     db.session.commit()
-    return render_template('resultado.html', resultado=detflujo(bono), bono=bono, mon=detmon(bono))
+    return render_template('resultado.html', resultado=detflujo(bono, False), bono=bono, mon=detmon(bono), inflaop=True)
+
+@app.route('/calfluinf/<int:id>')
+def calflujo_inf(id):
+    bono = Bono.query.get_or_404(id)
+    return render_template('resultado.html', resultado=detflujo(bono, True), bono=bono, mon=detmon(bono), inflaop=False)
 
 @app.route('/resultado/<int:id>')
 def ver_resultado(id):
     resultshow = Bono.query.get_or_404(id)
-    return render_template('resultado.html', resultado=detflujo(resultshow), bono=resultshow, mon=detmon(resultshow))
+    return render_template('resultado.html', resultado=detflujo(resultshow, False), bono=resultshow, mon=detmon(resultshow), inflaop=True)
 
 @app.route('/delete/<int:id>')
 def delete(id):
@@ -160,6 +187,7 @@ def login_post():
 @app.route('/signup',methods=['POST'])
 def signup_post():
     username = request.form['username']
+    rol = request.form['rol']
     email = request.form['email']
     firstname = request.form['firstname']
     lastname = request.form['lastname']
@@ -169,8 +197,7 @@ def signup_post():
     companyphone = request.form['companyphone']
     password = request.form['password']
     confirm = request.form['confirm']
-
-    if username == "" or email == "" or password == "" or firstname == "" or lastname == "" or birthday == "" or phone == "" or confirm== "":
+    if username == "" or email == "" or password == "" or firstname == "" or lastname == "" or birthday == "" or phone == "" or confirm== "" or rol=="":
         flash("Faltan datos!", "message")
         return redirect('/signup')
 
@@ -184,12 +211,12 @@ def signup_post():
             flash("Ya existe un usuario con ese nombre!", "message")
             return redirect('/signup')
 
-    user = User(username=username,email=email,password=password,firstname=firstname,lastname=lastname,birthday=birthday,phone=phone,companyname=companyname,companyphone=companyphone)
+    user = User(username=username,rol=rol,email=email,password=password,firstname=firstname,lastname=lastname,birthday=birthday,phone=phone,companyname=companyname,companyphone=companyphone)
     db.session.add(user)
     db.session.commit()
     user = User.query.filter_by(email=email).first()
     login_user(user)
-    return redirect('/home')
+    return redirect('/login')
    
 @app.route('/xcontra',methods=['GET'])
 def get_xcontra():

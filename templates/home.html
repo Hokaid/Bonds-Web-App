@@ -45,11 +45,21 @@ p {
         <hr class="my-4">
         <p class="lead">
           <br>
-          <a class="button" href="/calflujo" role="button">Calcular flujo de caja de bono corporativo</a>
+          {% if current_user.rol=="Emisor" %}
+          <a class="button" href="/calflujo" role="button">Emitir un bono</a>
+          {% endif %}
+          {% if current_user.rol=="Bonista" %}
+          <a class="button" href="/emitbons" role="button">Evaluar un bono</a>
+          {% endif %}
           <br><br><br>
           <a class="button" href="/xcontra" role="button">Ver mi Perfil</a>
           <br><br><br>
-          <a class="button" href="/oldcalcs" role="button">Ver calculos pasados</a>
+          {% if current_user.rol=="Emisor" %}
+          <a class="button" href="/oldcalcs" role="button">Ver bonos emitidos</a>
+          {% endif %}
+          {% if current_user.rol=="Bonista" %}
+          <a class="button" href="/oldcalcs" role="button">Ver evaluaciones pasadas</a>
+          {% endif %}
           <br><br><br>
           <a class="buttonc" href="/logout" role="button">Cerrar sesión</a>
         </p>

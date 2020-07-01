@@ -46,9 +46,14 @@ button[type=submit] {
 </style>
 <div class="topnav" id="myTopnav">
     <a href="/home" class="active">Inicio</a>
-    <a href="/calflujo" role="button">Calcular</a>
-    <a href="/oldcalcs" role="button">Calculos pasados</a>
-    <a href="/xcontra" role="button">Cambiar contraseña</a>
+    {% if current_user.rol=="Emisor" %}
+    <a href="/calflujo" role="button">Emitir</a>
+    <a href="/oldcalcs" role="button">bonos emitidos</a>
+    {% else %}
+    <a href="/emitbons" role="button">Evaluar</a>
+    <a href="/oldcalcs" role="button">bonos evaluados</a>
+    {% endif %}
+    <a href="/xcontra" role="button">Mi perfil</a>
     <a href="/logout" role="button">Cerrar sesión</a>
     <a href="javascript:void(0);" class="icon" onclick="myFunction()">
       <i class="fa fa-bars"></i>
@@ -68,7 +73,12 @@ button[type=submit] {
             {% endif %}
             {% endwith %}
             {% block body %}{% endblock %}
-            <h1 class="h1">Calculo de flujo de caja de Bono corporativo</h1>
+            {% if current_user.rol=="Emisor" %}
+            <h1 class="h1">Ingreso de datos de Bono</h1>
+            {% endif %}
+            {% if current_user.rol=="Bonista" %}
+            <h1 class="h1">Configuración de Bono</h1>
+            {% endif %}
             <form action="/calflujo" method="POST" class="form-group">
                 <br>
                 <select name="mcalculo" id="mcalc">
@@ -84,6 +94,13 @@ button[type=submit] {
                     <option value="Dolar">Dolar</option>
                     <option value="Euro">Euro</option>
                 </select>
+                {% if current_user.rol=="Emisor" %}
+                <input type="number" step="0.00000001" name="ianual" placeholder="Inflación Anual (%)" class="form-control">
+                {% endif %}
+                {% if current_user.rol=="Bonista" %}
+                <h3 class="h3">Inflación Anual (%): </h3>
+                <input type="number" step="0.00000001" name="ianual" value={{bono.ianual}} readonly="readonly" class="form-control">
+                {% endif %}
                 <br><br>
                 <h3 class="h3">Datos de Bono</h3>
                 <input type="number" step="0.01" name="vnominal" placeholder="Valor nominal" class="form-control">
@@ -128,14 +145,23 @@ button[type=submit] {
                     <option value="Anual">Anual</option>
                 </select>
                 <br>
-                <input type="number" step="0.00000001" name="tinteres" placeholder="Tasa de interés (%)" class="form-control">
+                <input type="number" step="0.00000001" name="tinteres" placeholder="Tasa de interés Anual (%)" class="form-control">
                 <br>
-                <input type="number" step="0.00000001" name="tdesc" placeholder="Tasa de Descuento (%)" class="form-control">
+                <input type="number" step="0.00000001" name="tdesc" placeholder="Tasa de Descuento Anual (%)" class="form-control">
                 <br>
                 <input type="number" step="0.00000001" name="irenta" placeholder="Impuesto a la Renta (%)" class="form-control">
                 <br>
                 <input type="date" id="femision" name="femision" value="2020-01-01" min="1900-01-01" max="2200-01-01">
                 <br><br>
+                {% if current_user.rol=="Emisor" %}
+                <h3 class="h3">Indique los plazos de gracia en orden y separados por comas</h3>
+                <h3 class="h3">Ejemplo: T,T,P,P</h3>
+                <input type="text" name="pgracia" placeholder="Plazos de Gracia" class="form-control">
+                {% endif %}
+                {% if current_user.rol=="Bonista" %}
+                <h3 class="h3">Plazos de gracia ordenados y separados por comas: </h3>
+                <input type="text" name="pgracia" value={{bono.pgracia}} readonly="readonly" class="form-control">
+                {% endif %}
                 <h3 class="h3">Costes y gastos Iniciales</h3>
                 <input type="number" step="0.00000001" name="prima" placeholder="% Prima (%)" class="form-control">
                 <br>
@@ -147,7 +173,12 @@ button[type=submit] {
                 <br>
                 <input type="number" step="0.00000001" name="cavali" placeholder="% CAVALI (%)" class="form-control">
                 <br><br>
-                <button type="submit" class="btn btn-block btn-dark mybtn">Calcular</button>
+                {% if current_user.rol=="Emisor" %}
+                <button type="submit" class="btn btn-block btn-dark mybtn">Emitir y Calcular</button>
+                {% endif %}
+                {% if current_user.rol=="Bonista" %}
+                <button type="submit" class="btn btn-block btn-dark mybtn">Guadar y Calcular</button>
+                {% endif %}
                 <br><br>
             </form>
         </div>

@@ -16,6 +16,9 @@ h1, h2, h3, h4, h5 {
 .bban {
     background: url('/static/img/delete.png') no-repeat;
 }
+.bcon {
+    background: url('/static/img/confi.png') no-repeat;
+}
 table, td, th {
     border: 1px solid #aaa;
 }
@@ -38,26 +41,57 @@ tr {background-color:white;}
 </style>
 <div class="topnav" id="myTopnav">
     <a href="/home" class="active">Inicio</a>
-    <a href="/calflujo" class="am" role="button">Calcular</a>
-    <a href="/oldcalcs" class="am" role="button">Calculos pasados</a>
-    <a href="/xcontra" class="am" role="button">Cambiar contraseña</a>
+    {% if current_user.rol=="Emisor" %}
+    <a href="/calflujo" role="button">Emitir</a>
+    <a href="/oldcalcs" role="button">bonos emitidos</a>
+    {% else %}
+    <a href="/emitbons" role="button">Evaluar</a>
+    <a href="/oldcalcs" role="button">bonos evaluados</a>
+    {% endif %}
+    <a href="/xcontra" class="am" role="button">Mi perfil</a>
     <a href="/logout" class="am" role="button">Cerrar sesión</a>
     <a href="javascript:void(0);" class="icon" onclick="myFunction()">
       <i class="fa fa-bars"></i>
     </a>
   </div>
 <div class="content">
-    <h1 style="text-align: center">Registro de cálculos pasados</h1>
+    {% if confiop %}
+    <h1 style="text-align: center">Bonos disponibles</h1>
+    {% else %}
+    {% if current_user.rol=="Emisor" %}
+    <h1 style="text-align: center">Registro de bonos emitidos</h1>
+    {% endif %}
+    {% if current_user.rol=="Bonista" %}
+    <h1 style="text-align: center">Registro de bonos evaluados</h1>
+    {% endif %}
+    {% endif %}
     {% if calculos|length < 1 %}
-    <h4 style="text-align: center">No hay calculos realizados.</h4>
+    {% if confiop %}
+    <h1 style="text-align: center">No hay bonos disponibles</h1>
+    {% else %}
+    {% if current_user.rol=="Emisor" %}
+    <h4 style="text-align: center">No hay bonos emitidos.</h4>
+    {% endif %}
+    {% if current_user.rol=="Bonista" %}
+    <h4 style="text-align: center">No hay bonos evaluados.</h4>
+    {% endif %}
+    {% endif %}
     {% else %}
     <table>
         <tr>
             <th>#</th>
-            <th>Fecha de cálculo</th>
+            {% if current_user.rol=="Emisor" %}
+            <th>Fecha de emisión</th>
+            {% endif %}
+            {% if current_user.rol=="Bonista" %}
+            <th>Fecha de evaluación</th>
+            {% endif %}
             <th>Metodo de cálculo</th>
             <th>Tipo de moneda</th>
             <th>Ver</th>
+            {% if confiop %}
+            <th>Configurar</th>
+            {% endif %}
             <th>Eliminar</th>
         </tr>
         {% for calculo in calculos %}
@@ -67,6 +101,9 @@ tr {background-color:white;}
                 <td>{{ calculo.mcalculo }}</td>
                 <td>{{ calculo.tmoneda }}</td>
                 <td><a class="bver" href="/resultado/{{calculo.id}}">. .</a></td>
+                {% if confiop %}
+                <td><a class="bcon" href="/configbon/{{calculo.id}}">. .</a></td>
+                {% endif %}
                 <td><a class="bban" href="/delete/{{calculo.id}}">. .</a></td>
             </tr>
         {% endfor %}
