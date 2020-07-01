@@ -160,7 +160,11 @@ button[type=submit] {
                 {% endif %}
                 {% if current_user.rol=="Bonista" %}
                 <h4 class="h4">Plazos de gracia ordenados y separados por comas: </h4>
-                <input type="text" name="pgracia" value={{bono.pgracia}} readonly="readonly" class="form-control">
+                {% if bono.pgracia=="" %}
+                <input type="text" name="pgracia" value="" class="form-control" readonly="readonly">
+                {% else %}
+                <input type="text" name="pgracia" value={{bono.pgracia}} class="form-control" readonly="readonly">
+                {% endif %}
                 {% endif %}
                 <h3 class="h3">Costes y gastos Iniciales</h3>
                 <input type="number" step="0.00000001" name="prima" placeholder="% Prima (%)" class="form-control">
